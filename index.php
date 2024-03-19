@@ -24,24 +24,62 @@
                 <label for="password_length">Lunghezza della password:</label>
                 <input type="number" id="password_length" name="password_length" min="8" max="64" required>
             </div>
+            <div class="mb-3 form-check">
+                <input type="checkbox" name="symbols" class="form-check-input" id="symbols">
+                <label class="form-check-label" for="symbols">Aggiungi simboli</label>
+            </div>
+            <div class="mb-3 form-check">
+                <input type="checkbox" name="numbers" class="form-check-input" id="numbers">
+                <label class="form-check-label" for="numbers">Aggiungi numeri</label>
+            </div>
+            <div class="mb-3 form-check">
+                <input type="checkbox" name="letters" class="form-check-input" id="letters">
+                <label class="form-check-label" for="letters">Aggiungi lettere</label>
+            </div>
+            <div class="mb-3 form-check">
+                <input type="checkbox" name="repeat_characters" class="form-check-input" id="repeat_characters">
+                <label class="form-check-label" for="repeat_characters">Permetti la ripetizione dei caratteri</label>
+            </div>
             <button type="submit" class="btn btn-primary">Genera Password</button>
         </form>
     </div>
+
+
 
     <?php
 
     session_start();
 
-    if (isset($_GET['password_length'])) {
-        $password_length = intval($_GET['password_length']);
+    if ($_SERVER["REQUEST_METHOD"] === "GET") {
+        if (isset($_GET['password_length'])) {
+            $password_length = intval($_GET['password_length']);
 
-        if ($password_length > 0) {
-            $password = generateRandomPassword($password_length);
-            $_SESSION['password'] = $password;
-            header('Location: ./results.php');
-            echo "<div class='text-center mt-5'> La tua password generata è: $password  </div>";
-        } else {
-            echo "<div class='text-center mt-5'> La lunghezza della password deve essere un numero positivo. </div>";
+            $chars = '';
+
+            if (!empty($_GET['symbols']) && $_GET['symbols'] === "on") {
+                $chars .= '!@#$%^&*()-_=+';
+            }
+
+            if (!empty($_GET['numbers']) && $_GET['numbers'] === "on") {
+                $chars .= '0123456789';
+            }
+
+            if (!empty($_GET['letters']) && $_GET['letters'] === "on") {
+                $chars .= 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            }
+
+            $allow_repetition = isset($_GET['repeat_characters']) && $_GET['repeat_characters'] === "on";
+
+            if (empty($chars)) {
+                echo "<div class='text-center mt-5'> Seleziona almeno una checkbox </div>";
+            } else {
+                $password = generateRandomPassword($password_length, $chars, $allow_repetition);
+
+                $_SESSION['password'] = $password;
+
+                header('Location: ./results.php');
+                exit;
+            }
         }
     }
 
