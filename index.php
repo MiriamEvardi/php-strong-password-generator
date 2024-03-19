@@ -50,38 +50,37 @@
 
     session_start();
 
-    if ($_SERVER["REQUEST_METHOD"] === "GET") {
-        if (isset($_GET['password_length'])) {
-            $password_length = intval($_GET['password_length']);
+    if (isset($_GET['password_length'])) {
+        $password_length = intval($_GET['password_length']);
 
-            $chars = '';
+        $chars = '';
 
-            if (!empty($_GET['symbols']) && $_GET['symbols'] === "on") {
-                $chars .= '!@#$%^&*()-_=+';
-            }
+        if (!empty($_GET['symbols']) && $_GET['symbols'] === "on") {
+            $chars .= '!@#$%^&*()-_=+';
+        }
 
-            if (!empty($_GET['numbers']) && $_GET['numbers'] === "on") {
-                $chars .= '0123456789';
-            }
+        if (!empty($_GET['numbers']) && $_GET['numbers'] === "on") {
+            $chars .= '0123456789';
+        }
 
-            if (!empty($_GET['letters']) && $_GET['letters'] === "on") {
-                $chars .= 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            }
+        if (!empty($_GET['letters']) && $_GET['letters'] === "on") {
+            $chars .= 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        }
 
-            $allow_repetition = isset($_GET['repeat_characters']) && $_GET['repeat_characters'] === "on";
+        $allow_repetition = isset($_GET['repeat_characters']) && $_GET['repeat_characters'] === "on";
 
-            if (empty($chars)) {
-                echo "<div class='text-center mt-5'> Seleziona almeno una checkbox </div>";
-            } else {
-                $password = generateRandomPassword($password_length, $chars, $allow_repetition);
+        if (empty($chars)) {
+            echo "<div class='text-center mt-5'> Seleziona almeno una checkbox </div>";
+        } else {
+            $password = generateRandomPassword($password_length, $chars, $allow_repetition);
 
-                $_SESSION['password'] = $password;
+            $_SESSION['password'] = $password;
 
-                header('Location: ./results.php');
-                exit;
-            }
+            header('Location: ./results.php');
+            exit;
         }
     }
+
 
 
 
