@@ -29,17 +29,25 @@
     </div>
 
     <?php
+
+    session_start();
+
     if (isset($_GET['password_length'])) {
         $password_length = intval($_GET['password_length']);
 
         if ($password_length > 0) {
-
             $password = generateRandomPassword($password_length);
+            $_SESSION['password'] = $password;
+            header('Location: ./results.php');
             echo "<div class='text-center mt-5'> La tua password generata è: $password  </div>";
+        } else {
+            echo "<div class='text-center mt-5'> La lunghezza della password deve essere un numero positivo. </div>";
         }
-    } else {
-        echo "<div class='text-center mt-5'> La lunghezza della password non è stata fornita. </div>";
     }
+
+
+
+
     ?>
 
 
